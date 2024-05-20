@@ -4,11 +4,22 @@ import {
   getAllStudentsFromDB,
   getAStudentFromDB,
 } from './student.service';
+import studentValidationSchema from './student.validation';
 
 const createStudent = async (req: Request, res: Response) => {
   try {
     const { student } = req.body;
-    const result = await createStudentIntoDB(student);
+    const { error, value: studentInfo } =
+      studentValidationSchema.validate(student);
+
+    if (error)
+      return res.status(500).json({
+        success: false,
+        message: 'Something went wrong!',
+        error: error.details,
+      });
+
+    const result = await createStudentIntoDB(studentInfo);
 
     res.status(201).json({
       success: true,
@@ -16,7 +27,11 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong!',
+      error,
+    });
   }
 };
 
@@ -30,7 +45,11 @@ const getAllStudents = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong!',
+      error,
+    });
   }
 };
 
@@ -45,7 +64,11 @@ const getAStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong!',
+      error,
+    });
   }
 };
 

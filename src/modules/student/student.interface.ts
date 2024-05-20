@@ -16,7 +16,7 @@ export type Student = {
   contactNo: string;
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'O+' | 'O-' | 'AB+' | 'AB-';
   presentAddress: string;
-  parmanentAddress: string;
+  permanentAddress: string;
   guardian: Guardian;
   profileImg?: string;
   isActive: 'active' | 'blocked';
