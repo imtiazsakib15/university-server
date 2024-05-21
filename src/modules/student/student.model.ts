@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
-import { Guardian, Student, UserName } from './student.interface';
+import { TGuardian, TStudent, TUserName } from './student.interface';
 import validator from 'validator';
 
-const userNameSchema = new Schema<UserName>(
+const userNameSchema = new Schema<TUserName>(
   {
     firstName: {
       type: String,
@@ -24,7 +24,7 @@ const userNameSchema = new Schema<UserName>(
   },
 );
 
-const guardianSchema = new Schema<Guardian>(
+const guardianSchema = new Schema<TGuardian>(
   {
     name: {
       type: String,
@@ -46,7 +46,7 @@ const guardianSchema = new Schema<Guardian>(
   },
 );
 
-const studentSchema = new Schema<Student>(
+const studentSchema = new Schema<TStudent>(
   {
     name: {
       type: userNameSchema,
@@ -115,4 +115,4 @@ const studentSchema = new Schema<Student>(
   },
 );
 
-export const StudentModel = model<Student>('Student', studentSchema);
+export const StudentModel = model<TStudent>('Student', studentSchema);

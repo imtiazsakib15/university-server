@@ -1,41 +1,48 @@
-import Joi from 'joi';
+import { z } from 'zod';
 
-const userNameValidationSchema = Joi.object({
-  firstName: Joi.string().min(2).max(20).required(),
-  lastName: Joi.string().min(2).max(20).required(),
+const userNameValidationSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(20, { message: 'First name must be at most 20 characters long' }),
+  lastName: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(20, { message: 'First name must be at most 20 characters long' }),
 });
 
-const guardianValidationSchema = Joi.object({
-  name: Joi.string().min(2).max(30).required(),
-  occupation: Joi.string().min(2).max(50).required(),
-  contactNo: Joi.string()
-    .pattern(/^[0-9]+$/)
-    .required(),
+const guardianValidationSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(20, { message: 'First name must be at most 20 characters long' }),
+  occupation: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(20, { message: 'First name must be at most 20 characters long' }),
+  contactNo: z.string(),
 });
 
-const studentValidationSchema = Joi.object({
+const studentValidationSchema = z.object({
   name: userNameValidationSchema.required(),
-  gender: Joi.string().valid('male', 'female').required(),
-  dateOfBirth: Joi.date().iso(),
-  email: Joi.string().email().required(),
-  contactNo: Joi.string()
-    .pattern(/^[0-9]+$/)
-    .required(),
-  bloodGroup: Joi.string().valid(
-    'A+',
-    'A-',
-    'B+',
-    'B-',
-    'O+',
-    'O-',
-    'AB+',
-    'AB-',
-  ),
-  presentAddress: Joi.string().min(2).max(50).required(),
-  permanentAddress: Joi.string().min(2).max(50).required(),
+  gender: z.enum(['male', 'female']),
+  dateOfBirth: z.string().date().optional(),
+  email: z.string().email(),
+  contactNo: z.string().regex(/^[0-9]+$/),
+  bloodGroup: z
+    .enum(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'])
+    .optional(),
+  presentAddress: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(50, { message: 'First name must be at most 50 characters long' }),
+  permanentAddress: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(50, { message: 'First name must be at most 50 characters long' }),
   guardian: guardianValidationSchema.required(),
-  profileImg: Joi.string().uri(),
-  isActive: Joi.string().valid('active', 'blocked'),
+  profileImg: z.string().url().optional(),
+  isActive: z.enum(['active', 'blocked']),
 });
 
 export default studentValidationSchema;

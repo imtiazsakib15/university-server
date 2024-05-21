@@ -9,14 +9,20 @@ import studentValidationSchema from './student.validation';
 const createStudent = async (req: Request, res: Response) => {
   try {
     const { student } = req.body;
-    const { error, value: studentInfo } =
-      studentValidationSchema.validate(student);
+
+    // Validation using Zod
+    const { data: studentInfo, error } =
+      studentValidationSchema.safeParse(student);
+
+    // Validation using Joi
+    // const { error, value: studentInfo } =
+    //   studentValidationSchema.validate(student);
 
     if (error)
       return res.status(500).json({
         success: false,
         message: 'Something went wrong!',
-        error: error.details,
+        error: error,
       });
 
     const result = await createStudentIntoDB(studentInfo);
