@@ -3,12 +3,13 @@ import {
   StudentModel,
   TGuardian,
   TStudent,
-  TStudentMethods,
+  // TStudentMethods,
   TUserName,
 } from './student.interface';
 import validator from 'validator';
 
-const userNameSchema = new Schema<TUserName, StudentModel, TStudentMethods>(
+// const userNameSchema = new Schema<TUserName, StudentModel, TStudentMethods>(
+const userNameSchema = new Schema<TUserName, StudentModel>(
   {
     firstName: {
       type: String,
@@ -126,12 +127,18 @@ const studentSchema = new Schema<TStudent>(
 );
 
 // custom instance method
-studentSchema.method(
-  'isStudentExists',
-  async function isStudentExists(id: string) {
-    const existingStudent = await Student.findOne({ id });
-    return existingStudent;
-  },
-);
+// studentSchema.method(
+//   'isStudentExists',
+//   async function isStudentExists(id: string) {
+//     const existingStudent = await Student.findOne({ id });
+//     return existingStudent;
+//   },
+// );
+
+// custom static method
+studentSchema.statics.isStudentExists = async (id: string) => {
+  const existingStudent = await Student.findOne({ id });
+  return existingStudent;
+};
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
