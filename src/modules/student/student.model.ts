@@ -1,8 +1,14 @@
 import { Schema, model } from 'mongoose';
-import { TGuardian, TStudent, TUserName } from './student.interface';
+import {
+  StudentModel,
+  TGuardian,
+  TStudent,
+  TStudentMethods,
+  TUserName,
+} from './student.interface';
 import validator from 'validator';
 
-const userNameSchema = new Schema<TUserName>(
+const userNameSchema = new Schema<TUserName, StudentModel, TStudentMethods>(
   {
     firstName: {
       type: String,
@@ -48,6 +54,10 @@ const guardianSchema = new Schema<TGuardian>(
 
 const studentSchema = new Schema<TStudent>(
   {
+    id: {
+      type: String,
+      required: [true, 'Please provide the student id.'],
+    },
     name: {
       type: userNameSchema,
       required: [true, 'Please provide the student name.'],
@@ -115,4 +125,13 @@ const studentSchema = new Schema<TStudent>(
   },
 );
 
-export const StudentModel = model<TStudent>('Student', studentSchema);
+// custom instance method
+studentSchema.method(
+  'isStudentExists',
+  async function isStudentExists(id: string) {
+    const existingStudent = await Student.findOne({ id });
+    return existingStudent;
+  },
+);
+
+export const Student = model<TStudent, StudentModel>('Student', studentSchema);

@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 export type TUserName = {
   firstName: string;
   lastName: string;
@@ -9,6 +11,7 @@ export type TGuardian = {
 };
 
 export type TStudent = {
+  id: string;
   name: TUserName;
   gender: 'male' | 'female';
   dateOfBirth?: string;
@@ -21,3 +24,9 @@ export type TStudent = {
   profileImg?: string;
   isActive: 'active' | 'blocked';
 };
+
+export type TStudentMethods = {
+  isStudentExists(id: string): Promise<TStudent | null>;
+};
+
+export type StudentModel = Model<TStudent, {}, TStudentMethods>;

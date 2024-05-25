@@ -24,6 +24,7 @@ const guardianValidationSchema = z.object({
 });
 
 const studentValidationSchema = z.object({
+  id: z.string(),
   name: userNameValidationSchema.required(),
   gender: z.enum(['male', 'female']),
   dateOfBirth: z.string().date().optional(),

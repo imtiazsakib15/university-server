@@ -21,7 +21,7 @@ const createStudent = async (req: Request, res: Response) => {
     if (error)
       return res.status(500).json({
         success: false,
-        message: 'Something went wrong!',
+        message: error.message || 'Something went wrong!',
         error: error,
       });
 
@@ -32,10 +32,10 @@ const createStudent = async (req: Request, res: Response) => {
       message: 'Student info saved successfully!',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong!',
+      message: error.message || 'Something went wrong!',
       error,
     });
   }
@@ -50,10 +50,10 @@ const getAllStudents = async (req: Request, res: Response) => {
       message: 'All students info retrieved successfully!',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong!',
+      message: error.message || 'Something went wrong!',
       error,
     });
   }
@@ -69,10 +69,10 @@ const getAStudent = async (req: Request, res: Response) => {
       message: 'Student info retrieved successfully!',
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong!',
+      message: error.message || 'Something went wrong!',
       error,
     });
   }
