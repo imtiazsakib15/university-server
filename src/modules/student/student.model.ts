@@ -6,7 +6,9 @@ import {
   // TStudentMethods,
   TUserName,
 } from './student.interface';
-import validator from 'validator';
+// import validator from 'validator';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 // const userNameSchema = new Schema<TUserName, StudentModel, TStudentMethods>(
 const userNameSchema = new Schema<TUserName, StudentModel>(
@@ -59,6 +61,10 @@ const studentSchema = new Schema<TStudent>(
       type: String,
       required: [true, 'Please provide the student id.'],
     },
+    password: {
+      type: String,
+      required: [true, 'Please provide the password.'],
+    },
     name: {
       type: userNameSchema,
       required: [true, 'Please provide the student name.'],
@@ -79,10 +85,10 @@ const studentSchema = new Schema<TStudent>(
       type: String,
       required: [true, 'Please provide an email address.'],
       unique: true,
-      validate: {
-        validator: (value: string) => validator.isEmail(value),
-        message: '{VALUE} is not a valid email address.',
-      },
+      // validate: {
+      //   validator: (value: string) => validator.isEmail(value),
+      //   message: '{VALUE} is not a valid email address.',
+      // },
     },
     contactNo: {
       type: String,
@@ -140,5 +146,14 @@ studentSchema.statics.isStudentExists = async (id: string) => {
   const existingStudent = await Student.findOne({ id });
   return existingStudent;
 };
+
+// pre save middleware / hook
+studentSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
