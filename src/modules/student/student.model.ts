@@ -156,4 +156,16 @@ studentSchema.pre('save', async function (next) {
   next();
 });
 
+// post save middleware / hook
+studentSchema.post('save', async function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+// query middleware / hook
+studentSchema.pre('find', async function (next) {
+  console.log(this);
+  next();
+});
+
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
