@@ -3,6 +3,7 @@ import {
   createStudentIntoDB,
   getAllStudentsFromDB,
   getAStudentFromDB,
+  deleteStudentFromDB,
 } from './student.service';
 import studentValidationSchema from './student.validation';
 
@@ -78,4 +79,23 @@ const getAStudent = async (req: Request, res: Response) => {
   }
 };
 
-export { createStudent, getAllStudents, getAStudent };
+const deleteStudent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await deleteStudentFromDB(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Student deleted successfully!',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong!',
+      error,
+    });
+  }
+};
+
+export { createStudent, getAllStudents, getAStudent, deleteStudent };

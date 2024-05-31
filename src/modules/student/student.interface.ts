@@ -23,7 +23,8 @@ export type TStudent = {
   permanentAddress: string;
   guardian: TGuardian;
   profileImg?: string;
-  isActive: 'active' | 'blocked';
+  isActive?: 'active' | 'blocked';
+  isDeleted?: boolean;
 };
 
 // custom instance method

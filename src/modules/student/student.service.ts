@@ -25,4 +25,14 @@ const getAStudentFromDB = async (id: string) => {
   return result;
 };
 
-export { createStudentIntoDB, getAllStudentsFromDB, getAStudentFromDB };
+const deleteStudentFromDB = async (id: string) => {
+  const result = await Student.updateOne({ _id: id }, { isDeleted: true });
+  return result;
+};
+
+export {
+  createStudentIntoDB,
+  getAllStudentsFromDB,
+  getAStudentFromDB,
+  deleteStudentFromDB,
+};

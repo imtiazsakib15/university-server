@@ -126,6 +126,10 @@ const studentSchema = new Schema<TStudent>(
       },
       default: 'active',
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
