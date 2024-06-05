@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { TStudent } from './student.interface';
 import { Student } from './student.model';
 
@@ -22,6 +23,11 @@ const getAllStudentsFromDB = async () => {
 
 const getAStudentFromDB = async (id: string) => {
   const result = await Student.findById(id);
+  // const result = await Student.aggregate([
+  //   {
+  //     $match: { _id: new mongoose.Types.ObjectId(id) },
+  //   },
+  // ]);
   return result;
 };
 

@@ -166,9 +166,23 @@ studentSchema.post('save', async function (doc, next) {
   next();
 });
 
-// query middleware / hook
+// query middleware/hook
+// filter out deleted students when searching all students
 studentSchema.pre('find', async function (next) {
-  console.log(this);
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+// filter out deleted student when searching a student
+studentSchema.pre('findOne', async function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
+  next();
+});
+
+// filter out deleted students when searching all students
+studentSchema.pre('aggregate', async function (next) {
+  console.log(this.pipeline());
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
