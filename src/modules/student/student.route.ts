@@ -3,6 +3,7 @@ import {
   createStudent,
   getAllStudents,
   getAStudent,
+  updateAStudent,
   deleteStudent,
 } from './student.controller';
 
@@ -13,6 +14,8 @@ router.post('/create-student', createStudent);
 router.get('/', getAllStudents);
 
 router.get('/:id', getAStudent);
+
+router.patch('/:id', updateAStudent);
 
 router.delete('/:id', deleteStudent);
 
