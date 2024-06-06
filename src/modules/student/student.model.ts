@@ -133,6 +133,9 @@ const studentSchema = new Schema<TStudent>(
   },
   {
     timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
   },
 );
 
@@ -181,9 +184,13 @@ studentSchema.pre('findOne', async function (next) {
 
 // filter out deleted students when searching all students
 studentSchema.pre('aggregate', async function (next) {
-  console.log(this.pipeline());
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
+});
+
+// get fullName using virtual
+studentSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName} ${this.name.lastName}`;
 });
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
