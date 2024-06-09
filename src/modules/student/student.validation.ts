@@ -24,8 +24,6 @@ const guardianValidationSchema = z.object({
 });
 
 const studentValidationSchema = z.object({
-  id: z.string(),
-  password: z.string(),
   name: userNameValidationSchema.required(),
   gender: z.enum(['male', 'female']),
   dateOfBirth: z.string().date().optional(),
@@ -44,7 +42,6 @@ const studentValidationSchema = z.object({
     .max(50, { message: 'First name must be at most 50 characters long' }),
   guardian: guardianValidationSchema.required(),
   profileImg: z.string().url().optional(),
-  isActive: z.enum(['active', 'blocked']).default('active'),
   isDeleted: z.boolean().default(false),
 });
 

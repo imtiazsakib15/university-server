@@ -1,19 +1,19 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
-export type TUserName = {
+export interface IUserName {
   firstName: string;
   lastName: string;
-};
-export type TGuardian = {
+}
+export interface IGuardian {
   name: string;
   occupation: string;
   contactNo: string;
-};
+}
 
-export type TStudent = {
+export interface IStudent {
   id: string;
-  password: string;
-  name: TUserName;
+  user: Types.ObjectId;
+  name: IUserName;
   gender: 'male' | 'female';
   dateOfBirth?: string;
   email: string;
@@ -21,11 +21,10 @@ export type TStudent = {
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'O+' | 'O-' | 'AB+' | 'AB-';
   presentAddress: string;
   permanentAddress: string;
-  guardian: TGuardian;
+  guardian: IGuardian;
   profileImg?: string;
-  isActive?: 'active' | 'blocked';
   isDeleted?: boolean;
-};
+}
 
 // custom instance method
 // export type TStudentMethods = {
@@ -35,6 +34,6 @@ export type TStudent = {
 // export type StudentModel = Model<TStudent, {}, TStudentMethods>;
 
 // custom static method
-export interface StudentModel extends Model<TStudent> {
-  isStudentExists(id: string): Promise<TStudent | null>;
+export interface StudentModel extends Model<IStudent> {
+  isStudentExists(id: string): Promise<IStudent | null>;
 }

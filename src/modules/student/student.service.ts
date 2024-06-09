@@ -1,20 +1,6 @@
 import mongoose from 'mongoose';
-import { TStudent } from './student.interface';
+import { IStudent } from './student.interface';
 import { Student } from './student.model';
-
-const createStudentIntoDB = async (studentInfo: TStudent) => {
-  // check if student exists using custom static method
-  if (await Student.isStudentExists(studentInfo.id))
-    throw new Error('Student already exists!');
-  const result = await Student.create(studentInfo);
-
-  // check if student exists using custom instance method
-  // const student = new Student(studentInfo);
-  // if (await student.isStudentExists(studentInfo.id))
-  //   throw new Error('Student already exists!');
-  // const result = await student.save();
-  return result;
-};
 
 const getAllStudentsFromDB = async () => {
   const result = await Student.find();
@@ -31,7 +17,7 @@ const getAStudentFromDB = async (id: string) => {
   return result;
 };
 
-const updateAStudentIntoDB = async (id: string, studentInfo: TStudent) => {
+const updateAStudentIntoDB = async (id: string, studentInfo: IStudent) => {
   const result = await Student.updateOne({ _id: id }, studentInfo);
   return result;
 };
@@ -42,7 +28,6 @@ const deleteStudentFromDB = async (id: string) => {
 };
 
 export {
-  createStudentIntoDB,
   getAllStudentsFromDB,
   getAStudentFromDB,
   updateAStudentIntoDB,

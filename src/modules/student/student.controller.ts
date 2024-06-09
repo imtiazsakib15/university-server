@@ -1,47 +1,11 @@
 import { Request, Response } from 'express';
 import {
-  createStudentIntoDB,
   getAllStudentsFromDB,
   getAStudentFromDB,
   updateAStudentIntoDB,
   deleteStudentFromDB,
 } from './student.service';
 import studentValidationSchema from './student.validation';
-
-const createStudent = async (req: Request, res: Response) => {
-  try {
-    const { student } = req.body;
-
-    // Validation using Zod
-    const { data: studentInfo, error } =
-      studentValidationSchema.safeParse(student);
-
-    // Validation using Joi
-    // const { error, value: studentInfo } =
-    //   studentValidationSchema.validate(student);
-
-    if (error)
-      return res.status(500).json({
-        success: false,
-        message: error.message || 'Something went wrong!',
-        error: error,
-      });
-
-    const result = await createStudentIntoDB(studentInfo);
-
-    res.status(201).json({
-      success: true,
-      message: 'Student info saved successfully!',
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong!',
-      error,
-    });
-  }
-};
 
 const getAllStudents = async (req: Request, res: Response) => {
   try {
@@ -119,10 +83,4 @@ const deleteStudent = async (req: Request, res: Response) => {
   }
 };
 
-export {
-  createStudent,
-  getAllStudents,
-  getAStudent,
-  deleteStudent,
-  updateAStudent,
-};
+export { getAllStudents, getAStudent, deleteStudent, updateAStudent };

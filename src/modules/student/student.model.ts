@@ -1,26 +1,18 @@
 import { Schema, model } from 'mongoose';
 import {
   StudentModel,
-  TGuardian,
-  TStudent,
+  IGuardian,
+  IStudent,
   // TStudentMethods,
-  TUserName,
+  IUserName,
 } from './student.interface';
-// import validator from 'validator';
-import bcrypt from 'bcrypt';
-import config from '../../config';
 
-// const userNameSchema = new Schema<TUserName, StudentModel, TStudentMethods>(
-const userNameSchema = new Schema<TUserName, StudentModel>(
+const userNameSchema = new Schema<IUserName>(
   {
     firstName: {
       type: String,
       required: [true, 'Please provide the first name.'],
       trim: true,
-      // validate: {
-      //   validator: (value: string) => validator.isAlpha(value),
-      //   message: '{VALUE} is not a valid first name.',
-      // },
     },
     lastName: {
       type: String,
@@ -33,7 +25,7 @@ const userNameSchema = new Schema<TUserName, StudentModel>(
   },
 );
 
-const guardianSchema = new Schema<TGuardian>(
+const guardianSchema = new Schema<IGuardian>(
   {
     name: {
       type: String,
@@ -55,15 +47,18 @@ const guardianSchema = new Schema<TGuardian>(
   },
 );
 
-const studentSchema = new Schema<TStudent>(
+// const studentSchema = new Schema<IStudent, StudentModel, TStudentMethods>(
+const studentSchema = new Schema<IStudent, StudentModel>(
   {
     id: {
       type: String,
       required: [true, 'Please provide the student id.'],
     },
-    password: {
-      type: String,
-      required: [true, 'Please provide the password.'],
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'Please provide the user id.'],
+      unique: true,
+      ref: 'User',
     },
     name: {
       type: userNameSchema,
@@ -84,11 +79,7 @@ const studentSchema = new Schema<TStudent>(
     email: {
       type: String,
       required: [true, 'Please provide an email address.'],
-      unique: true,
-      // validate: {
-      //   validator: (value: string) => validator.isEmail(value),
-      //   message: '{VALUE} is not a valid email address.',
-      // },
+      // unique: true,
     },
     contactNo: {
       type: String,
@@ -118,14 +109,6 @@ const studentSchema = new Schema<TStudent>(
     profileImg: {
       type: String,
     },
-    isActive: {
-      type: String,
-      enum: {
-        values: ['active', 'blocked'],
-        message: '{VALUE} is not a valid status.',
-      },
-      default: 'active',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -154,21 +137,6 @@ studentSchema.statics.isStudentExists = async (id: string) => {
   return existingStudent;
 };
 
-// pre save middleware / hook
-studentSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-// post save middleware / hook
-studentSchema.post('save', async function (doc, next) {
-  doc.password = '';
-  next();
-});
-
 // query middleware/hook
 // filter out deleted students when searching all students
 studentSchema.pre('find', async function (next) {
@@ -193,4 +161,4 @@ studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.lastName}`;
 });
 
-export const Student = model<TStudent, StudentModel>('Student', studentSchema);
+export const Student = model<IStudent, StudentModel>('Student', studentSchema);
