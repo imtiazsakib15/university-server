@@ -5,7 +5,8 @@ import {
   updateAStudentIntoDB,
   deleteStudentFromDB,
 } from './student.service';
-import studentValidationSchema from './student.validation';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status';
 
 const getAllStudents = async (
   req: Request,
@@ -15,7 +16,8 @@ const getAllStudents = async (
   try {
     const result = await getAllStudentsFromDB();
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: 'All students info retrieved successfully!',
       data: result,
@@ -30,7 +32,8 @@ const getAStudent = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const result = await getAStudentFromDB(id);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: 'Student info retrieved successfully!',
       data: result,
@@ -50,9 +53,10 @@ const updateAStudent = async (
     const { student } = req.body;
     const result = await updateAStudentIntoDB(id, student);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      message: 'Student updated successfully!',
+      message: 'Student info updated successfully!',
       data: result,
     });
   } catch (error) {
@@ -69,9 +73,10 @@ const deleteStudent = async (
     const { id } = req.params;
     const result = await deleteStudentFromDB(id);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      message: 'Student deleted successfully!',
+      message: 'Student info deleted successfully!',
       data: result,
     });
   } catch (error) {

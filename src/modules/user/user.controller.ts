@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { createStudentIntoDB } from './user.service';
 import studentValidationSchema from '../student/student.validation';
 import { IStudent } from '../student/student.interface';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status';
 
 const createStudent = async (
   req: Request,
@@ -19,7 +21,8 @@ const createStudent = async (
 
     const result = await createStudentIntoDB(password, studentInfo as IStudent);
 
-    res.status(201).json({
+    sendResponse(res, {
+      statusCode: httpStatus.CREATED,
       success: true,
       message: 'Student info saved successfully!',
       data: result,
