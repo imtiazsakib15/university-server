@@ -1,13 +1,12 @@
-import mongoose from 'mongoose';
 import { IStudent } from './student.interface';
 import { Student } from './student.model';
 
-const getAllStudentsFromDB = async () => {
+const getAllFromDB = async () => {
   const result = await Student.find();
   return result;
 };
 
-const getAStudentFromDB = async (id: string) => {
+const getByIdFromDB = async (id: string) => {
   const result = await Student.findById(id);
   // const result = await Student.aggregate([
   //   {
@@ -17,19 +16,19 @@ const getAStudentFromDB = async (id: string) => {
   return result;
 };
 
-const updateAStudentIntoDB = async (id: string, studentInfo: IStudent) => {
+const updateByIdIntoDB = async (id: string, studentInfo: IStudent) => {
   const result = await Student.updateOne({ _id: id }, studentInfo);
   return result;
 };
 
-const deleteStudentFromDB = async (id: string) => {
+const deleteByIdFromDB = async (id: string) => {
   const result = await Student.updateOne({ _id: id }, { isDeleted: true });
   return result;
 };
 
-export {
-  getAllStudentsFromDB,
-  getAStudentFromDB,
-  updateAStudentIntoDB,
-  deleteStudentFromDB,
+export const StudentServices = {
+  getAllFromDB,
+  getByIdFromDB,
+  updateByIdIntoDB,
+  deleteByIdFromDB,
 };

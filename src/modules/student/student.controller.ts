@@ -1,16 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
-import {
-  getAllStudentsFromDB,
-  getAStudentFromDB,
-  updateAStudentIntoDB,
-  deleteStudentFromDB,
-} from './student.service';
+import { StudentServices } from './student.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 
-const getAllStudents = catchAsync(async (req, res, next) => {
-  const result = await getAllStudentsFromDB();
+const getAll = catchAsync(async (req, res) => {
+  const result = await StudentServices.getAllFromDB();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -20,9 +14,9 @@ const getAllStudents = catchAsync(async (req, res, next) => {
   });
 });
 
-const getAStudent = catchAsync(async (req, res, next) => {
+const getById = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await getAStudentFromDB(id);
+  const result = await StudentServices.getByIdFromDB(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -32,10 +26,10 @@ const getAStudent = catchAsync(async (req, res, next) => {
   });
 });
 
-const updateAStudent = catchAsync(async (req, res, next) => {
+const updateById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { student } = req.body;
-  const result = await updateAStudentIntoDB(id, student);
+  const result = await StudentServices.updateByIdIntoDB(id, student);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -45,9 +39,9 @@ const updateAStudent = catchAsync(async (req, res, next) => {
   });
 });
 
-const deleteStudent = catchAsync(async (req, res, next) => {
+const deleteById = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await deleteStudentFromDB(id);
+  const result = await StudentServices.deleteByIdFromDB(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -57,4 +51,9 @@ const deleteStudent = catchAsync(async (req, res, next) => {
   });
 });
 
-export { getAllStudents, getAStudent, deleteStudent, updateAStudent };
+export const StudentControllers = {
+  getAll,
+  getById,
+  deleteById,
+  updateById,
+};
