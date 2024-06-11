@@ -10,4 +10,9 @@ const createAcademicSemesterIntoDB = async (payload: IAcademicSemester) => {
   return result;
 };
 
-export { createAcademicSemesterIntoDB };
+const getAllAcademicSemestersFromDB = async () => {
+  const allAcademicSemesters = await AcademicSemester.find({});
+  return allAcademicSemesters;
+};
+
+export { createAcademicSemesterIntoDB, getAllAcademicSemestersFromDB };
