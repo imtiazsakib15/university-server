@@ -4,6 +4,7 @@ import {
   createAcademicSemesterIntoDB,
   getAcademicSemesterFromDB,
   getAllAcademicSemestersFromDB,
+  updateAcademicSemesterIntoDB,
 } from './academicSemester.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
@@ -46,4 +47,27 @@ const getAcademicSemester = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export { createAcademicSemester, getAllAcademicSemesters, getAcademicSemester };
+const updateAcademicSemester = catchAsync(
+  async (req: Request, res: Response) => {
+    const { semesterId } = req.params;
+    const academicSemester = req.body;
+    const result = await updateAcademicSemesterIntoDB(
+      semesterId,
+      academicSemester,
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Academic semester updated successfully!',
+      data: result,
+    });
+  },
+);
+
+export {
+  createAcademicSemester,
+  getAllAcademicSemesters,
+  getAcademicSemester,
+  updateAcademicSemester,
+};
