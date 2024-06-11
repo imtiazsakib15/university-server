@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createAcademicSemester,
+  getAcademicSemester,
   getAllAcademicSemesters,
 } from './academicSemester.controller';
 import validateRequest from '../../middlewares/validateRequest';
@@ -15,5 +16,7 @@ router.post(
 );
 
 router.get('/', getAllAcademicSemesters);
+
+router.get('/:semesterId', getAcademicSemester);
 
 export const academicSemesterRoutes = router;
