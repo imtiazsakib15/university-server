@@ -23,3 +23,7 @@ export interface IAcademicSemester {
   startMonth: TMonths;
   endMonth: TMonths;
 }
+
+export interface IAcademicSemesterNameCodeMapper {
+  [ket: string]: string;
+}

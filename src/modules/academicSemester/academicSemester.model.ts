@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
 import { IAcademicSemester } from './academicSemester.interface';
 import {
-  academicSemesterCode,
-  academicSemesterName,
-  months,
+  ACADEMIC_SEMESTER_CODE,
+  ACADEMIC_SEMESTER_NAME,
+  MONTHS,
 } from './academicSemester.constant';
 
 const academicSemesterSchema = new Schema<IAcademicSemester>(
@@ -11,7 +11,7 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
     name: {
       type: String,
       enum: {
-        values: academicSemesterName,
+        values: ACADEMIC_SEMESTER_NAME,
         message: '{VALUE} is not a valid name.',
       },
       required: true,
@@ -19,7 +19,7 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
     code: {
       type: String,
       enum: {
-        values: academicSemesterCode,
+        values: ACADEMIC_SEMESTER_CODE,
         message: '{VALUE} is not a valid code.',
       },
       required: true,
@@ -31,7 +31,7 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
     startMonth: {
       type: String,
       enum: {
-        values: months,
+        values: MONTHS,
         message: '{VALUE} is not a recognized month.',
       },
       required: true,
@@ -39,7 +39,7 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
     endMonth: {
       type: String,
       enum: {
-        values: months,
+        values: MONTHS,
         message: '{VALUE} is not a recognized month.',
       },
       required: true,
@@ -50,7 +50,16 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
   },
 );
 
-export const AcademicSemesterSchema = model<IAcademicSemester>(
+academicSemesterSchema.pre('save', async function (next) {
+  const isSemesterExists = await AcademicSemester.findOne({
+    name: this.name,
+    year: this.year,
+  });
+  if (isSemesterExists) throw new Error('Semester already exists!');
+  next();
+});
+
+export const AcademicSemester = model<IAcademicSemester>(
   'AcademicSemester',
   academicSemesterSchema,
 );
