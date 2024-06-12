@@ -53,6 +53,7 @@ const createStudentValidationSchema = z.object({
         .max(50, { message: 'First name must be at most 50 characters long' }),
       guardian: guardianValidationSchema.required(),
       profileImg: z.string().url().optional(),
+      academicDepartment: z.string(),
       academicSemester: z.string(),
     }),
   }),

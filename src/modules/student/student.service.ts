@@ -2,12 +2,26 @@ import { IStudent } from './student.interface';
 import { Student } from './student.model';
 
 const getAllFromDB = async () => {
-  const result = await Student.find();
+  const result = await Student.find()
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    })
+    .populate('academicSemester');
   return result;
 };
 
 const getByIdFromDB = async (id: string) => {
-  const result = await Student.findById(id);
+  const result = await Student.findById(id)
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    })
+    .populate('academicSemester');
   // const result = await Student.aggregate([
   //   {
   //     $match: { _id: new mongoose.Types.ObjectId(id) },
