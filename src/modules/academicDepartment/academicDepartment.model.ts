@@ -30,7 +30,6 @@ academicDepartmentSchema.pre('save', async function (next) {
 });
 academicDepartmentSchema.pre('updateOne', async function (next) {
   const query = this.getQuery();
-  console.log(query);
   const isAcademicDepartmentExists =
     !!(await AcademicDepartment.findOne(query));
 
