@@ -5,7 +5,9 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 
 const create = catchAsync(async (req: Request, res: Response) => {
-  const result = await AcademicDepartmentServices.createIntoDB(req.body);
+  const academicDepartment = req.body;
+  const result =
+    await AcademicDepartmentServices.createIntoDB(academicDepartment);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -40,8 +42,25 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateById = catchAsync(async (req: Request, res: Response) => {
+  const { departmentId } = req.params;
+  const academicDepartment = req.body;
+  const result = await AcademicDepartmentServices.updateByIdIntoDB(
+    departmentId,
+    academicDepartment,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Academic department updated successfully!',
+    data: result,
+  });
+});
+
 export const AcademicDepartmentControllers = {
   create,
   getAll,
   getById,
+  updateById,
 };

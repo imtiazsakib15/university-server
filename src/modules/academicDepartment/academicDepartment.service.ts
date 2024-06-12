@@ -12,14 +12,29 @@ const getAllFromDB = async () => {
 };
 
 const getByIdFromDB = async (departmentId: string) => {
-  const academicDepartment = await AcademicDepartment.findOne({
+  const academicDepartment = await AcademicDepartment.findById({
     _id: departmentId,
   });
   return academicDepartment;
+};
+
+const updateByIdIntoDB = async (
+  departmentId: string,
+  payload: IAcademicDepartment,
+) => {
+  const result = await AcademicDepartment.findByIdAndUpdate(
+    {
+      _id: departmentId,
+    },
+    payload,
+    { new: true },
+  );
+  return result;
 };
 
 export const AcademicDepartmentServices = {
   createIntoDB,
   getAllFromDB,
   getByIdFromDB,
+  updateByIdIntoDB,
 };

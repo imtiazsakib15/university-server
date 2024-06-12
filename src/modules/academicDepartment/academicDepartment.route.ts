@@ -15,4 +15,10 @@ router.get('/', AcademicDepartmentControllers.getAll);
 
 router.get('/:departmentId', AcademicDepartmentControllers.getById);
 
+router.patch(
+  '/:departmentId',
+  validateRequest(AcademicDepartmentValidationSchemas.updateSchema),
+  AcademicDepartmentControllers.updateById,
+);
+
 export const AcademicDepartmentRoutes = router;

@@ -12,7 +12,7 @@ const getAllFromDB = async () => {
 };
 
 const getByIdFromDB = async (facultyId: string) => {
-  const academicFaculty = await AcademicFaculty.findOne({ _id: facultyId });
+  const academicFaculty = await AcademicFaculty.findById({ _id: facultyId });
   return academicFaculty;
 };
 

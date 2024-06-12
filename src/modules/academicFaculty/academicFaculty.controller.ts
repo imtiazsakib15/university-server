@@ -5,7 +5,8 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 
 const create = catchAsync(async (req: Request, res: Response) => {
-  const result = await AcademicFacultyServices.createIntoDB(req.body);
+  const academicFaculty = req.body;
+  const result = await AcademicFacultyServices.createIntoDB(academicFaculty);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -41,9 +42,10 @@ const getById = catchAsync(async (req: Request, res: Response) => {
 
 const updateById = catchAsync(async (req: Request, res: Response) => {
   const { facultyId } = req.params;
+  const academicFaculty = req.body;
   const result = await AcademicFacultyServices.updateByIdIntoDB(
     facultyId,
-    req.body,
+    academicFaculty,
   );
 
   sendResponse(res, {
