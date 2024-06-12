@@ -3,10 +3,11 @@ import { IStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { IUser } from './user.interface';
 import { User } from './user.model';
+import { generateStudentId } from './user.utils';
 
 const createStudentIntoDB = async (password: string, studentInfo: IStudent) => {
   const userInfo: Partial<IUser> = {
-    id: '203010001',
+    id: await generateStudentId(studentInfo),
     password: password || (config.default_password as string),
     role: 'student',
     status: 'in-progress',

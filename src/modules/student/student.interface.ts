@@ -23,6 +23,7 @@ export interface IStudent {
   permanentAddress: string;
   guardian: IGuardian;
   profileImg?: string;
+  academicSemester: Types.ObjectId;
   isDeleted?: boolean;
 }
 
