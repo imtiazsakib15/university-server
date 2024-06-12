@@ -166,6 +166,15 @@ studentSchema.pre('aggregate', async function (next) {
   next();
 });
 
+//
+studentSchema.pre('updateOne', async function (next) {
+  const query = this.getQuery();
+  const isStudentExists = !!(await Student.findOne(query));
+  console.log(isStudentExists);
+  if (!isStudentExists) throw new Error('Student is not found!');
+  next();
+});
+
 // get fullName using virtual
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.lastName}`;
