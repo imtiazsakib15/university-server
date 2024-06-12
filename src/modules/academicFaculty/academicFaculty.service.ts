@@ -6,6 +6,12 @@ const createIntoDB = async (payload: IAcademicFaculty) => {
   return result;
 };
 
+const getAllFromDB = async () => {
+  const allAcademicFaculties = await AcademicFaculty.find({});
+  return allAcademicFaculties;
+};
+
 export const AcademicFacultyServices = {
   createIntoDB,
+  getAllFromDB,
 };

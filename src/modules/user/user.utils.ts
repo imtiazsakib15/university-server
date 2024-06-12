@@ -25,7 +25,7 @@ export const generateStudentId = async (payload: IStudent) => {
   )
     .sort({ createdAt: -1 })
     .lean();
-  console.log(lastStudent);
+
   const studentIdLastPart = (Number(lastStudent?.id?.substring(6) ?? 0) + 1)
     .toString()
     .padStart(4, '0');
