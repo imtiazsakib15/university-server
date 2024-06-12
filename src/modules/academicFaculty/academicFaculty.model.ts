@@ -23,6 +23,14 @@ academicFacultySchema.pre('save', async function (next) {
     throw new Error('Academic faculty already exists!');
   next();
 });
+academicFacultySchema.pre('updateOne', async function (next) {
+  const query = this.getQuery();
+  const isAcademicFacultyExists = !!(await AcademicFaculty.findOne(query));
+
+  if (!isAcademicFacultyExists)
+    throw new Error('Academic faculty is not found!');
+  next();
+});
 
 export const AcademicFaculty = model<IAcademicFaculty>(
   'AcademicFaculty',
