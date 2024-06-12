@@ -55,7 +55,15 @@ academicSemesterSchema.pre('save', async function (next) {
     name: this.name,
     year: this.year,
   });
-  if (isSemesterExists) throw new Error('Semester already exists!');
+  if (isSemesterExists) throw new Error('Academic semester already exists!');
+  next();
+});
+academicSemesterSchema.pre('updateOne', async function (next) {
+  const query = this.getQuery();
+  const isAcademicFacultyExists = !!(await AcademicSemester.findOne(query));
+
+  if (!isAcademicFacultyExists)
+    throw new Error('Academic semester is not found!');
   next();
 });
 

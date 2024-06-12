@@ -31,10 +31,9 @@ const updateByIdIntoDB = async (
   )
     throw new Error("Semester name and code doesn't match");
 
-  const result = await AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
+  const result = await AcademicSemester.updateOne({ _id: id }, payload, {
     new: true,
   });
-  if (!result) throw new Error('Semester not found!');
 
   return result;
 };
