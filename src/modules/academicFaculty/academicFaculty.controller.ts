@@ -8,7 +8,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
   const result = await AcademicFacultyServices.createIntoDB(req.body);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: 'Academic faculty created successfully!',
     data: result,
