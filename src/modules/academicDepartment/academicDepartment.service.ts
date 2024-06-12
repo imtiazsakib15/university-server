@@ -22,7 +22,7 @@ const updateByIdIntoDB = async (
   departmentId: string,
   payload: IAcademicDepartment,
 ) => {
-  const result = await AcademicDepartment.findByIdAndUpdate(
+  const result = await AcademicDepartment.updateOne(
     {
       _id: departmentId,
     },
