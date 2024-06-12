@@ -27,7 +27,21 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getById = catchAsync(async (req: Request, res: Response) => {
+  const { departmentId } = req.params;
+  const academicDepartment =
+    await AcademicDepartmentServices.getByIdFromDB(departmentId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Academic department retrieved successfully!',
+    data: academicDepartment,
+  });
+});
+
 export const AcademicDepartmentControllers = {
   create,
   getAll,
+  getById,
 };

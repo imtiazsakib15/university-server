@@ -28,20 +28,20 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
 
 const getById = catchAsync(async (req: Request, res: Response) => {
   const { facultyId } = req.params;
-  const allAcademicFaculties =
+  const academicFaculty =
     await AcademicFacultyServices.getByIdFromDB(facultyId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Academic faculty retrieved successfully!',
-    data: allAcademicFaculties,
+    data: academicFaculty,
   });
 });
 
 const updateById = catchAsync(async (req: Request, res: Response) => {
   const { facultyId } = req.params;
-  const academicFaculty = await AcademicFacultyServices.updateByIdIntoDB(
+  const result = await AcademicFacultyServices.updateByIdIntoDB(
     facultyId,
     req.body,
   );
@@ -50,7 +50,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Academic faculty updated successfully!',
-    data: academicFaculty,
+    data: result,
   });
 });
 
