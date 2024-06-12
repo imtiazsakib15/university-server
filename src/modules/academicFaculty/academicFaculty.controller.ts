@@ -21,7 +21,7 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic faculty created successfully!',
+    message: 'All academic faculties retrieved successfully!',
     data: allAcademicFaculties,
   });
 });
@@ -34,8 +34,23 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic faculty created successfully!',
+    message: 'Academic faculty retrieved successfully!',
     data: allAcademicFaculties,
+  });
+});
+
+const updateById = catchAsync(async (req: Request, res: Response) => {
+  const { facultyId } = req.params;
+  const academicFaculty = await AcademicFacultyServices.updateByIdIntoDB(
+    facultyId,
+    req.body,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Academic faculty updated successfully!',
+    data: academicFaculty,
   });
 });
 
@@ -43,4 +58,5 @@ export const AcademicFacultyControllers = {
   create,
   getAll,
   getById,
+  updateById,
 };

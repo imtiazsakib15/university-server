@@ -16,8 +16,23 @@ const getByIdFromDB = async (facultyId: string) => {
   return academicFaculty;
 };
 
+const updateByIdIntoDB = async (
+  facultyId: string,
+  payload: IAcademicFaculty,
+) => {
+  const academicFaculty = await AcademicFaculty.findByIdAndUpdate(
+    {
+      _id: facultyId,
+    },
+    payload,
+    { new: true },
+  );
+  return academicFaculty;
+};
+
 export const AcademicFacultyServices = {
   createIntoDB,
   getAllFromDB,
   getByIdFromDB,
+  updateByIdIntoDB,
 };
