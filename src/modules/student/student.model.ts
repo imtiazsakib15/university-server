@@ -172,7 +172,7 @@ studentSchema.pre('aggregate', async function (next) {
 studentSchema.pre('updateOne', async function (next) {
   const query = this.getQuery();
   const isStudentExists = !!(await Student.findOne(query));
-  console.log(isStudentExists);
+
   if (!isStudentExists)
     throw new AppError(httpStatus.NOT_FOUND, 'Student is not found!');
   next();
