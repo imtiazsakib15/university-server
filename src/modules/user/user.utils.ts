@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 import { IAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { IStudent } from '../student/student.interface';
@@ -15,7 +17,11 @@ export const generateStudentId = async (payload: IStudent) => {
         code: 1,
       },
     ).lean();
-  if (!academicSemester) throw new Error('Academic semester is not valid');
+  if (!academicSemester)
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Academic semester is not valid',
+    );
 
   const lastStudent: Partial<IStudent> | null = await Student.findOne(
     {

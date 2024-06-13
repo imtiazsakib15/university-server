@@ -6,6 +6,8 @@ import {
   // TStudentMethods,
   IUserName,
 } from './student.interface';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const userNameSchema = new Schema<IUserName>(
   {
@@ -171,7 +173,8 @@ studentSchema.pre('updateOne', async function (next) {
   const query = this.getQuery();
   const isStudentExists = !!(await Student.findOne(query));
   console.log(isStudentExists);
-  if (!isStudentExists) throw new Error('Student is not found!');
+  if (!isStudentExists)
+    throw new AppError(httpStatus.NOT_FOUND, 'Student is not found!');
   next();
 });
 
