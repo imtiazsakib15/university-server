@@ -158,7 +158,7 @@ studentSchema.pre('find', async function (next) {
 
 // filter out deleted student when searching a student
 studentSchema.pre('findOne', async function (next) {
-  this.findOne({ isDeleted: { $ne: true } });
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
 
@@ -169,12 +169,13 @@ studentSchema.pre('aggregate', async function (next) {
 });
 
 //
-studentSchema.pre('updateOne', async function (next) {
+studentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery();
-  const isStudentExists = !!(await Student.findOne(query));
+  const isStudentExists = await Student.findOne(query);
 
-  if (!isStudentExists)
+  if (!isStudentExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student is not found!');
+  }
   next();
 });
 

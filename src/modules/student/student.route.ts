@@ -9,6 +9,6 @@ router.get('/:id', StudentControllers.getById);
 
 router.patch('/:id', StudentControllers.updateById);
 
-router.delete('/:id', StudentControllers.deleteById);
+router.delete('/:studentId', StudentControllers.deleteById);
 
 export const StudentRoutes = router;
