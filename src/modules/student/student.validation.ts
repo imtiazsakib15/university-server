@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const userNameValidationSchema = z.object({
+const createUserNameValidationSchema = z.object({
   firstName: z
     .string()
     .min(2, { message: 'First name must be at least 2 characters long' })
@@ -11,7 +11,7 @@ const userNameValidationSchema = z.object({
     .max(20, { message: 'First name must be at most 20 characters long' }),
 });
 
-const guardianValidationSchema = z.object({
+const createGuardianValidationSchema = z.object({
   name: z
     .string()
     .min(2, { message: 'First name must be at least 2 characters long' })
@@ -23,7 +23,7 @@ const guardianValidationSchema = z.object({
   contactNo: z.string(),
 });
 
-const createStudentValidationSchema = z.object({
+const createSchema = z.object({
   body: z.object({
     password: z
       .string({
@@ -35,7 +35,7 @@ const createStudentValidationSchema = z.object({
       .optional(),
 
     student: z.object({
-      name: userNameValidationSchema.required(),
+      name: createUserNameValidationSchema.required(),
       gender: z.enum(['male', 'female']),
       dateOfBirth: z.string().date().optional(),
       email: z.string().email(),
@@ -51,7 +51,7 @@ const createStudentValidationSchema = z.object({
         .string()
         .min(2, { message: 'First name must be at least 2 characters long' })
         .max(50, { message: 'First name must be at most 50 characters long' }),
-      guardian: guardianValidationSchema.required(),
+      guardian: createGuardianValidationSchema.required(),
       profileImg: z.string().url().optional(),
       academicDepartment: z.string(),
       academicSemester: z.string(),
@@ -59,4 +59,63 @@ const createStudentValidationSchema = z.object({
   }),
 });
 
-export { createStudentValidationSchema };
+const updateUserNameValidationSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(20, { message: 'First name must be at most 20 characters long' })
+    .optional(),
+  lastName: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(20, { message: 'First name must be at most 20 characters long' })
+    .optional(),
+});
+
+const updateGuardianValidationSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(20, { message: 'First name must be at most 20 characters long' })
+    .optional(),
+  occupation: z
+    .string()
+    .min(2, { message: 'First name must be at least 2 characters long' })
+    .max(20, { message: 'First name must be at most 20 characters long' })
+    .optional(),
+  contactNo: z.string().optional(),
+});
+
+const updateSchema = z.object({
+  body: z.object({
+    student: z.object({
+      name: updateUserNameValidationSchema,
+      gender: z.enum(['male', 'female']).optional(),
+      dateOfBirth: z.string().date().optional(),
+      email: z.string().email().optional(),
+      contactNo: z
+        .string()
+        .regex(/^[0-9]+$/)
+        .optional(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'])
+        .optional(),
+      presentAddress: z
+        .string()
+        .min(2, { message: 'First name must be at least 2 characters long' })
+        .max(50, { message: 'First name must be at most 50 characters long' })
+        .optional(),
+      permanentAddress: z
+        .string()
+        .min(2, { message: 'First name must be at least 2 characters long' })
+        .max(50, { message: 'First name must be at most 50 characters long' })
+        .optional(),
+      guardian: updateGuardianValidationSchema,
+      profileImg: z.string().url().optional(),
+      academicDepartment: z.string().optional(),
+      academicSemester: z.string().optional(),
+    }),
+  }),
+});
+
+export const StudentValidationSchemas = { createSchema, updateSchema };

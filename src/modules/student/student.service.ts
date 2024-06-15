@@ -34,10 +34,33 @@ const getByIdFromDB = async (id: string) => {
   return result;
 };
 
-const updateByIdIntoDB = async (id: string, studentInfo: IStudent) => {
-  const result = await Student.findOneAndUpdate({ _id: id }, studentInfo, {
-    new: true,
-  });
+const updateByIdIntoDB = async (
+  studentId: string,
+  studentInfo: Partial<IStudent>,
+) => {
+  const { name, guardian, ...remainingStudentInfo } = studentInfo;
+  const modifiedUpdatedInfo: Record<string, unknown> = {
+    ...remainingStudentInfo,
+  };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedInfo[`name.${key}`] = value;
+    }
+  }
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedUpdatedInfo[`guardian.${key}`] = value;
+    }
+  }
+
+  const result = await Student.findOneAndUpdate(
+    { id: studentId },
+    modifiedUpdatedInfo,
+    {
+      new: true,
+    },
+  );
   return result;
 };
 
