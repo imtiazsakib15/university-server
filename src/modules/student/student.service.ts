@@ -59,6 +59,7 @@ const updateByIdIntoDB = async (
     modifiedUpdatedInfo,
     {
       new: true,
+      runValidators: true,
     },
   );
   return result;

@@ -89,7 +89,7 @@ const updateGuardianValidationSchema = z.object({
 const updateSchema = z.object({
   body: z.object({
     student: z.object({
-      name: updateUserNameValidationSchema,
+      name: updateUserNameValidationSchema.optional(),
       gender: z.enum(['male', 'female']).optional(),
       dateOfBirth: z.string().date().optional(),
       email: z.string().email().optional(),
@@ -110,7 +110,7 @@ const updateSchema = z.object({
         .min(2, { message: 'First name must be at least 2 characters long' })
         .max(50, { message: 'First name must be at most 50 characters long' })
         .optional(),
-      guardian: updateGuardianValidationSchema,
+      guardian: updateGuardianValidationSchema.optional(),
       profileImg: z.string().url().optional(),
       academicDepartment: z.string().optional(),
       academicSemester: z.string().optional(),
