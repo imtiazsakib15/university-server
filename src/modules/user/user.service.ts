@@ -15,7 +15,7 @@ const createStudentIntoDB = async (password: string, studentInfo: IStudent) => {
     session.startTransaction();
     const userInfo: Partial<IUser> = {
       id: await generateStudentId(studentInfo),
-      password: password || (config.default_password as string),
+      password: password || (config.DEFAULT_PASSWORD as string),
       role: 'student',
       status: 'in-progress',
     };
