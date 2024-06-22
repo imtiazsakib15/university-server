@@ -21,7 +21,7 @@ const createStudentIntoDB = async (password: string, studentInfo: IStudent) => {
     };
 
     const newUser = await User.create([userInfo], { session });
-    console.log({ newUser });
+
     if (!newUser[0]) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user.');
     }
@@ -29,17 +29,18 @@ const createStudentIntoDB = async (password: string, studentInfo: IStudent) => {
     studentInfo.id = newUser[0].id;
 
     const newStudent = await Student.create([studentInfo], { session });
-    console.log({ newStudent });
+
     if (!newStudent[0]) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student.');
     }
     await session.commitTransaction();
     await session.endSession();
     return newStudent[0];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student.');
+    throw new Error(error);
   }
 };
 

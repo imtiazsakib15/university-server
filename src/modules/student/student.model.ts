@@ -81,7 +81,7 @@ const studentSchema = new Schema<IStudent, StudentModel>(
     email: {
       type: String,
       required: [true, 'Please provide an email address.'],
-      // unique: true,
+      unique: true,
     },
     contactNo: {
       type: String,
@@ -181,7 +181,7 @@ studentSchema.pre('findOneAndUpdate', async function (next) {
 
 // get fullName using virtual
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.lastName}`;
+  return `${this.name?.firstName} ${this.name?.lastName}`;
 });
 
 export const Student = model<IStudent, StudentModel>('Student', studentSchema);
