@@ -8,21 +8,24 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import { SEARCHABLE_FIELDS } from './student.constant';
 
 const getAllFromDB = async (query: Record<string, unknown>) => {
-  const studentQuery = new QueryBuilder(Student.find(), query)
+  const studentQuery = new QueryBuilder(
+    Student.find()
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
+      })
+      .populate('academicSemester'),
+    query,
+  )
     .search(SEARCHABLE_FIELDS)
     .filter()
     .sort()
     .pagination()
     .fieldLimiting();
 
-  const result = await studentQuery.modelQuery
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    })
-    .populate('academicSemester');
+  const result = await studentQuery.modelQuery;
   return result;
 };
 
