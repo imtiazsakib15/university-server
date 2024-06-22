@@ -4,62 +4,18 @@ import { Student } from './student.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { SEARCHABLE_FIELDS } from './student.constant';
 
 const getAllFromDB = async (query: Record<string, unknown>) => {
-  // filtering using searchTerm
-  let searchTerm: string = '';
-  if (query?.searchTerm) searchTerm = query.searchTerm as string;
+  const studentQuery = new QueryBuilder(Student.find(), query)
+    .search(SEARCHABLE_FIELDS)
+    .filter()
+    .sort()
+    .pagination()
+    .fieldLimiting();
 
-  const searchableFields: string[] = [
-    'name.firstName',
-    'name.lastName',
-    'email',
-  ];
-
-  const searchQuery = Student.find({
-    $or: searchableFields.map((field: string) => {
-      return {
-        [field]: {
-          $regex: searchTerm,
-          $options: 'i',
-        },
-      };
-    }),
-  });
-
-  // filtering using fields
-  const excludeFields: string[] = [
-    'searchTerm',
-    'sort',
-    'page',
-    'limit',
-    'fields',
-  ];
-  const queryObj: Record<string, unknown> = { ...query };
-  excludeFields.forEach((field: string) => delete queryObj[field]);
-
-  const filterQuery = searchQuery.find(queryObj);
-
-  // sorting using fields
-  let sort = '-createdAt';
-  if (query?.sort) sort = query.sort as string;
-  const sortQuery = filterQuery.sort(sort);
-
-  // pagination
-  let page: number = 1;
-  let limit: number = 10;
-  if (query?.page) page = Number(query.page) as number;
-  if (query?.limit) limit = Number(query.limit) as number;
-
-  const skip: number = (page - 1) * limit;
-  const paginateQuery = sortQuery.skip(skip).limit(limit);
-
-  // field limiting
-  let fields: string = '';
-  if (query?.fields) fields = (query.fields as string).split(',').join(' ');
-  const fieldLimitingQuery = paginateQuery.select(fields);
-
-  const result = await fieldLimitingQuery
+  const result = await studentQuery.modelQuery
     .populate({
       path: 'academicDepartment',
       populate: {
