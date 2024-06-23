@@ -9,7 +9,7 @@ import {
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
-const userNameSchema = new Schema<IUserName>(
+export const userNameSchema = new Schema<IUserName>(
   {
     firstName: {
       type: String,
