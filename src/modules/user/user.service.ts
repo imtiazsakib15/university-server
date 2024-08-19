@@ -4,11 +4,16 @@ import { IStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { IUser } from './user.interface';
 import { User } from './user.model';
-import { generateStudentId } from './user.utils';
+import { generateFacultyId, generateStudentId } from './user.utils';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import { Faculty } from '../faculty/faculty.model';
+import { IFaculty } from '../faculty/faculty.interface';
 
-const createStudentIntoDB = async (password: string, studentInfo: IStudent) => {
+const createStudentIntoDB = async (
+  password: string,
+  studentInfo: Partial<IStudent>,
+) => {
   const session = await mongoose.startSession();
 
   try {
@@ -44,4 +49,40 @@ const createStudentIntoDB = async (password: string, studentInfo: IStudent) => {
   }
 };
 
-export { createStudentIntoDB };
+const createFacultyIntoDB = async (
+  password: string,
+  facultyInfo: Partial<IFaculty>,
+) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const userInfo: Partial<IUser> = {
+      id: await generateFacultyId(),
+      password: password || config.DEFAULT_PASSWORD,
+      role: 'faculty',
+      status: 'in-progress',
+    };
+    const newUser = await User.create([userInfo], { session });
+
+    if (!newUser)
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user.');
+
+    facultyInfo.user = newUser[0]._id;
+    facultyInfo.id = newUser[0].id;
+
+    const newFaculty = await Faculty.create([facultyInfo], { session });
+
+    if (!newFaculty)
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create faculty.');
+
+    await session.commitTransaction();
+    await session.endSession();
+    return newFaculty[0];
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(error);
+  }
+};
+
+export const UserServices = { createStudentIntoDB, createFacultyIntoDB };

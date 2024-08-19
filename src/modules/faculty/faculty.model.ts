@@ -38,7 +38,6 @@ const facultySchema = new Schema<IFaculty>(
     designation: {
       type: String,
       required: [true, 'Please provide a designation.'],
-      unique: true,
     },
     contactNo: {
       type: String,
