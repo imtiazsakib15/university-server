@@ -13,6 +13,11 @@ const getAllFromDB = async (query: Record<string, unknown>) => {
   return await adminQuery.modelQuery;
 };
 
+const getByIdFromDB = async (id: string) => {
+  return await Admin.findById(id);
+};
+
 export const AdminServices = {
   getAllFromDB,
+  getByIdFromDB,
 };
