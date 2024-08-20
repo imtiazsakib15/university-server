@@ -20,8 +20,7 @@ const createSchema = z.object({
       .min(6, { message: 'Password must be at least 6 characters long' })
       .max(20, { message: 'Password must be less than 20 characters' })
       .optional(),
-    faculty: z.object({
-      user: z.string().min(1, { message: 'Please provide the user id.' }),
+    admin: z.object({
       name: createUserNameSchema.required(),
       gender: z.enum(['male', 'female']),
       dateOfBirth: z.string().optional(),
@@ -62,10 +61,6 @@ const updateUserNameSchema = z.object({
 
 const updateSchema = z.object({
   body: z.object({
-    user: z
-      .string()
-      .min(1, { message: 'Please provide the user id.' })
-      .optional(),
     name: updateUserNameSchema.optional(),
     gender: z.enum(['male', 'female']).optional(),
     dateOfBirth: z.string().optional(),
@@ -95,7 +90,7 @@ const updateSchema = z.object({
   }),
 });
 
-export const FacultyValidationSchemas = {
+export const AdminValidationSchemas = {
   createSchema,
   updateSchema,
 };

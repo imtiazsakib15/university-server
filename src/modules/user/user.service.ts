@@ -4,11 +4,17 @@ import { IStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { IUser } from './user.interface';
 import { User } from './user.model';
-import { generateFacultyId, generateStudentId } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utils';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { Faculty } from '../faculty/faculty.model';
 import { IFaculty } from '../faculty/faculty.interface';
+import { IAdmin } from '../admin/admin.interface';
+import { Admin } from '../admin/admin.model';
 
 const createStudentIntoDB = async (
   password: string,
@@ -78,6 +84,7 @@ const createFacultyIntoDB = async (
     await session.commitTransaction();
     await session.endSession();
     return newFaculty[0];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -85,4 +92,45 @@ const createFacultyIntoDB = async (
   }
 };
 
-export const UserServices = { createStudentIntoDB, createFacultyIntoDB };
+const createAdminIntoDB = async (
+  password: string,
+  adminInfo: Partial<IAdmin>,
+) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const userInfo: Partial<IUser> = {
+      id: await generateAdminId(),
+      password: password || config.DEFAULT_PASSWORD,
+      role: 'admin',
+      status: 'in-progress',
+    };
+    const newUser = await User.create([userInfo], { session });
+
+    if (!newUser)
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user.');
+
+    adminInfo.user = newUser[0]._id;
+    adminInfo.id = newUser[0].id;
+
+    const newAdmin = await Admin.create([adminInfo], { session });
+
+    if (!newAdmin)
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create admin.');
+
+    await session.commitTransaction();
+    await session.endSession();
+    return newAdmin[0];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(error);
+  }
+};
+
+export const UserServices = {
+  createStudentIntoDB,
+  createFacultyIntoDB,
+  createAdminIntoDB,
+};

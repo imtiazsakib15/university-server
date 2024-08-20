@@ -6,6 +6,8 @@ import { IStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { IFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
+import { IAdmin } from '../admin/admin.interface';
+import { Admin } from '../admin/admin.model';
 
 export const generateStudentId = async (payload: Partial<IStudent>) => {
   const academicSemester: Partial<IAcademicSemester> | null =
@@ -60,4 +62,22 @@ export const generateFacultyId = async () => {
 
   const newFacultyId: string = `F-${newFacultyIdLastPart}`;
   return newFacultyId;
+};
+
+export const generateAdminId = async () => {
+  const lastAdmin: IAdmin | null = await Admin.findOne(
+    {},
+    { _id: 0, id: 1, createdAt: 1 },
+  )
+    .sort({ createdAt: -1 })
+    .lean();
+
+  const newAdminIdLastPart: string = (
+    Number(lastAdmin?.id?.substring(2) ?? 0) + 1
+  )
+    .toString()
+    .padStart(4, '0');
+
+  const newAdminId: string = `A-${newAdminIdLastPart}`;
+  return newAdminId;
 };
