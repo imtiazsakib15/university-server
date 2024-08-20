@@ -47,6 +47,55 @@ const createSchema = z.object({
   }),
 });
 
-export const AdminValidationSchemas = {
+const updateUserNameSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, { message: 'Please provide the first name.' })
+    .trim()
+    .optional(),
+  lastName: z
+    .string()
+    .min(1, { message: 'Please provide the last name.' })
+    .trim()
+    .optional(),
+});
+
+const updateSchema = z.object({
+  body: z.object({
+    user: z
+      .string()
+      .min(1, { message: 'Please provide the user id.' })
+      .optional(),
+    name: updateUserNameSchema.optional(),
+    gender: z.enum(['male', 'female']).optional(),
+    dateOfBirth: z.string().optional(),
+    email: z
+      .string()
+      .email({ message: 'Please provide a valid email address.' })
+      .optional(),
+    designation: z
+      .string()
+      .min(1, { message: 'Please provide a designation.' })
+      .optional(),
+    contactNo: z
+      .string()
+      .min(1, { message: 'Please provide a contact number.' })
+      .optional(),
+    presentAddress: z
+      .string()
+      .min(1, { message: 'Please provide the present address.' })
+      .trim()
+      .optional(),
+    permanentAddress: z
+      .string()
+      .min(1, { message: 'Please provide the permanent address.' })
+      .trim()
+      .optional(),
+    profileImg: z.string().optional(),
+  }),
+});
+
+export const FacultyValidationSchemas = {
   createSchema,
+  updateSchema,
 };
