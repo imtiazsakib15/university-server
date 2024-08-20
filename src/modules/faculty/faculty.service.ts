@@ -6,7 +6,9 @@ const getAllFromDB = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(
     Faculty.find().populate({
       path: 'academicDepartment',
-      populate: 'academicFaculty',
+      populate: {
+        path: 'academicFaculty',
+      },
     }),
     query,
   )
@@ -20,6 +22,18 @@ const getAllFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const getByIdFromDB = async (id: string) => {
+  const result = await Faculty.findById(id).populate({
+    path: 'academicDepartment',
+    populate: {
+      path: 'academicFaculty',
+    },
+  });
+
+  return result;
+};
+
 export const FacultyServices = {
   getAllFromDB,
+  getByIdFromDB,
 };
