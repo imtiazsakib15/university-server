@@ -13,7 +13,6 @@ export interface IFaculty {
   presentAddress: string;
   permanentAddress: string;
   profileImg: string;
-  academicFaculty: Types.ObjectId;
   academicDepartment: Types.ObjectId;
   isDeleted: boolean;
 }

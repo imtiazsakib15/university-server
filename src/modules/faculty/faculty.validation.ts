@@ -42,9 +42,6 @@ const createSchema = z.object({
         .min(1, { message: 'Please provide the permanent address.' })
         .trim(),
       profileImg: z.string().optional(),
-      academicFaculty: z
-        .string()
-        .min(1, { message: 'Please provide the academic faculty.' }),
       academicDepartment: z
         .string()
         .min(1, { message: 'Please provide the academic department.' }),
@@ -93,10 +90,6 @@ const updateSchema = z.object({
       .trim()
       .optional(),
     profileImg: z.string().optional(),
-    academicFaculty: z
-      .string()
-      .min(1, { message: 'Please provide the academic faculty.' })
-      .optional(),
     academicDepartment: z
       .string()
       .min(1, { message: 'Please provide the academic department.' })

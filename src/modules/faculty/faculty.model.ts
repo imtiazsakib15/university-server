@@ -56,11 +56,6 @@ const facultySchema = new Schema<IFaculty>(
     profileImg: {
       type: String,
     },
-    academicFaculty: {
-      type: Schema.Types.ObjectId,
-      required: [true, 'Please provide the academic faculty.'],
-      ref: 'AcademicFaculty',
-    },
     academicDepartment: {
       type: Schema.Types.ObjectId,
       required: [true, 'Please provide the academic department.'],
