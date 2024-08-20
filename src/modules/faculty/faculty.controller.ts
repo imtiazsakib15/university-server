@@ -29,7 +29,23 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
+const updateById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { faculty } = req.body;
+  const result = await FacultyServices.updateByIdIntoDB(id, faculty);
+
+  if (!result) throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found.');
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculty info updated successfully!',
+    data: result,
+  });
+});
+
 export const FacultyControllers = {
   getAll,
   getById,
+  updateById,
 };

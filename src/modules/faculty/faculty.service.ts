@@ -1,5 +1,6 @@
 import QueryBuilder from '../../builder/QueryBuilder';
 import { SEARCHABLE_FIELDS } from './faculty.constant';
+import { IFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
 
 const getAllFromDB = async (query: Record<string, unknown>) => {
@@ -33,7 +34,27 @@ const getByIdFromDB = async (id: string) => {
   return result;
 };
 
+const updateByIdIntoDB = async (id: string, facultyInfo: Partial<IFaculty>) => {
+  const { name, ...remainingFacultyInfo } = facultyInfo;
+  const modifiedUpdatedInfo: Record<string, unknown> = {
+    ...remainingFacultyInfo,
+  };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedInfo[`name.${key}`] = value;
+    }
+  }
+
+  const result = await Faculty.findByIdAndUpdate(id, modifiedUpdatedInfo, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
 export const FacultyServices = {
   getAllFromDB,
   getByIdFromDB,
+  updateByIdIntoDB,
 };
