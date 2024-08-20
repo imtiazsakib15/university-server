@@ -71,4 +71,33 @@ const facultySchema = new Schema<IFaculty>(
   },
 );
 
+facultySchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+facultySchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+facultySchema.pre('findOneAndDelete', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+facultySchema.pre('findOneAndUpdate', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+facultySchema.pre('updateOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+facultySchema.pre('updateMany', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+facultySchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
 export const Faculty = model<IFaculty>('Faculty', facultySchema);
