@@ -1,7 +1,11 @@
+import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { SEARCHABLE_FIELDS } from './faculty.constant';
 import { IFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
+import { User } from '../user/user.model';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const getAllFromDB = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(
@@ -53,8 +57,39 @@ const updateByIdIntoDB = async (id: string, facultyInfo: Partial<IFaculty>) => {
   return result;
 };
 
+const deleteByIdFromDB = async (id: string) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const deletedFaculty = await Faculty.findByIdAndUpdate(
+      id,
+      { isDeleted: true },
+      { new: true, session },
+    );
+    const deletedUser = await User.findByIdAndUpdate(
+      { _id: deletedFaculty?.user },
+      { isDeleted: true },
+      { new: true, session },
+    );
+
+    if (!deletedUser || !deletedFaculty)
+      throw new AppError(httpStatus.NOT_FOUND, 'User or faculty not found');
+
+    await session.commitTransaction();
+    return { deletedUser, deletedFaculty };
+  } catch (error: unknown) {
+    await session.abortTransaction();
+    if (error instanceof Error)
+      throw new AppError(httpStatus.BAD_REQUEST, error.message);
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete faculty');
+  } finally {
+    await session.endSession();
+  }
+};
+
 export const FacultyServices = {
   getAllFromDB,
   getByIdFromDB,
   updateByIdIntoDB,
+  deleteByIdFromDB,
 };

@@ -44,8 +44,21 @@ const updateById = catchAsync(async (req, res) => {
   });
 });
 
+const deleteById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await FacultyServices.deleteByIdFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculty info deleted successfully!',
+    data: result,
+  });
+});
+
 export const FacultyControllers = {
   getAll,
   getById,
   updateById,
+  deleteById,
 };
