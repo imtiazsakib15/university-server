@@ -11,4 +11,6 @@ router.post(
   CourseControllers.create,
 );
 
+router.get('/', CourseControllers.getAll);
+
 export const CourseRoutes = router;
