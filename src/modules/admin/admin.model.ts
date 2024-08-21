@@ -66,4 +66,33 @@ const adminSchema = new Schema<IAdmin>(
   },
 );
 
+adminSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+adminSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+adminSchema.pre('findOneAndDelete', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+adminSchema.pre('findOneAndUpdate', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+adminSchema.pre('updateOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+adminSchema.pre('updateMany', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+adminSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
 export const Admin = model<IAdmin>('Admin', adminSchema);
