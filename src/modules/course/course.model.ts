@@ -32,13 +32,13 @@ const courseSchema = new Schema<ICourse>(
       trim: true,
     },
     code: {
-      type: String,
+      type: Number,
       required: [true, 'Please provide the course code.'],
       unique: true,
       trim: true,
     },
     credit: {
-      type: String,
+      type: Number,
       required: [true, 'Please provide the course credit.'],
       trim: true,
     },

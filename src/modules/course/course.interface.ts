@@ -8,7 +8,7 @@ export interface IPreRequisiteCourse {
 export interface ICourse {
   title: string;
   prefix: string;
-  code: string;
-  credit: string;
+  code: number;
+  credit: number;
   preRequisiteCourse: IPreRequisiteCourse[];
 }
