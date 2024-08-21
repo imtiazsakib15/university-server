@@ -29,7 +29,23 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
+const updateById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { admin } = req.body;
+  const result = await AdminServices.updateByIdIntoDB(id, admin);
+
+  if (!result) throw new AppError(httpStatus.NOT_FOUND, 'Admin not found.');
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin info updated successfully!',
+    data: result,
+  });
+});
+
 export const AdminControllers = {
   getAll,
   getById,
+  updateById,
 };
