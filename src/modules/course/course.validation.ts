@@ -24,7 +24,8 @@ const createSchema: AnyZodObject = z.object({
         .number({ required_error: 'Course credit is required.' })
         .positive('Course credit must be a positive number.')
         .int('Course credit must be an integer.'),
-      preRequisiteCourse: z.array(createPreRequisiteCourseSchema).optional(),
+      preRequisiteCourses: z.array(createPreRequisiteCourseSchema).optional(),
+      isDeleted: z.boolean().default(false),
     }),
   }),
 });
@@ -58,6 +59,7 @@ const updateSchema: AnyZodObject = z.object({
         .int('Course credit must be an integer.')
         .optional(),
       preRequisiteCourse: z.array(updatePreRequisiteCourseSchema).optional(),
+      isDeleted: z.boolean().optional(),
     }),
   }),
 });

@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 
 export interface IPreRequisiteCourse {
   course: Types.ObjectId;
-  isDeleted: boolean;
+  isDeleted?: boolean;
 }
 
 export interface ICourse {
@@ -10,5 +10,6 @@ export interface ICourse {
   prefix: string;
   code: number;
   credit: number;
-  preRequisiteCourse: IPreRequisiteCourse[];
+  preRequisiteCourses?: IPreRequisiteCourse[];
+  isDeleted?: boolean;
 }

@@ -42,9 +42,13 @@ const courseSchema = new Schema<ICourse>(
       required: [true, 'Please provide the course credit.'],
       trim: true,
     },
-    preRequisiteCourse: {
+    preRequisiteCourses: {
       type: [preRequisiteCourseSchema],
       default: [],
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
   {
