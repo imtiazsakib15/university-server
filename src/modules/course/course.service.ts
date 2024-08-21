@@ -23,4 +23,12 @@ const getAllFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
-export const CourseServices = { createIntoDB, getAllFromDB };
+const getByIdFromDB = async (id: string) => {
+  const result = await Course.findById(id).populate({
+    path: 'preRequisiteCourses.course',
+  });
+
+  return result;
+};
+
+export const CourseServices = { createIntoDB, getAllFromDB, getByIdFromDB };

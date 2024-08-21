@@ -13,4 +13,6 @@ router.post(
 
 router.get('/', CourseControllers.getAll);
 
+router.get('/:id', CourseControllers.getById);
+
 export const CourseRoutes = router;

@@ -2,6 +2,7 @@ import catchAsync from '../../utils/catchAsync';
 import { CourseServices } from './course.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 
 const create = catchAsync(async (req, res) => {
   const { course } = req.body;
@@ -26,4 +27,18 @@ const getAll = catchAsync(async (req, res) => {
   });
 });
 
-export const CourseControllers = { create, getAll };
+const getById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await CourseServices.getByIdFromDB(id);
+
+  if (!result) throw new AppError(httpStatus.NOT_FOUND, 'Course not found.');
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course info retrieved successfully!',
+    data: result,
+  });
+});
+
+export const CourseControllers = { create, getAll, getById };
