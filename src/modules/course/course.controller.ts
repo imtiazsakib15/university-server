@@ -41,4 +41,18 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
-export const CourseControllers = { create, getAll, getById };
+const deleteById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await CourseServices.deleteByIdFromDB(id);
+
+  if (!result) throw new AppError(httpStatus.NOT_FOUND, 'Course not found.');
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course deleted successfully!',
+    data: result,
+  });
+});
+
+export const CourseControllers = { create, getAll, getById, deleteById };

@@ -15,4 +15,6 @@ router.get('/', CourseControllers.getAll);
 
 router.get('/:id', CourseControllers.getById);
 
+router.delete('/:id', CourseControllers.deleteById);
+
 export const CourseRoutes = router;

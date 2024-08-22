@@ -31,4 +31,13 @@ const getByIdFromDB = async (id: string) => {
   return result;
 };
 
-export const CourseServices = { createIntoDB, getAllFromDB, getByIdFromDB };
+const deleteByIdFromDB = async (id: string) => {
+  return await Course.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
+};
+
+export const CourseServices = {
+  createIntoDB,
+  getAllFromDB,
+  getByIdFromDB,
+  deleteByIdFromDB,
+};
