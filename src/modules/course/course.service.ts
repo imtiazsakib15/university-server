@@ -1,7 +1,10 @@
+import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { SEARCHABLE_FIELDS } from './course.constant';
 import { ICourse } from './course.interface';
 import { Course } from './course.model';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const createIntoDB = async (payload: ICourse) => {
   return await Course.create(payload);
@@ -31,6 +34,82 @@ const getByIdFromDB = async (id: string) => {
   return result;
 };
 
+const updateByIdIntoDB = async (id: string, payload: Partial<ICourse>) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const { preRequisiteCourses, ...remainingCourseInfo } = payload;
+    let result = await Course.findByIdAndUpdate(id, remainingCourseInfo, {
+      new: true,
+      runValidators: true,
+      session,
+    });
+    if (!result) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Something went wrong.');
+    }
+
+    if (preRequisiteCourses && preRequisiteCourses?.length > 0) {
+      const deletedPreRequisiteCourseIds = preRequisiteCourses
+        .filter((course) => course.course && course.isDeleted)
+        ?.map((course) => course.course);
+
+      result = await Course.findByIdAndUpdate(
+        id,
+        {
+          $pull: {
+            preRequisiteCourses: {
+              course: { $in: deletedPreRequisiteCourseIds },
+            },
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+      if (!result) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Something went wrong.');
+      }
+
+      const newPreRequisiteCourses = preRequisiteCourses.filter(
+        (course) => course.course && !course.isDeleted,
+      );
+
+      result = await Course.findByIdAndUpdate(
+        id,
+        {
+          $addToSet: {
+            preRequisiteCourses: {
+              $each: newPreRequisiteCourses,
+            },
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+    }
+    if (!result) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Something went wrong.');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+    return result;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      error.message || 'Something went wrong.',
+    );
+  }
+};
+
 const deleteByIdFromDB = async (id: string) => {
   return await Course.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
 };
@@ -39,5 +118,6 @@ export const CourseServices = {
   createIntoDB,
   getAllFromDB,
   getByIdFromDB,
+  updateByIdIntoDB,
   deleteByIdFromDB,
 };

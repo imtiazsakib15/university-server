@@ -41,6 +41,21 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
+const updateById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { course } = req.body;
+  const result = await CourseServices.updateByIdIntoDB(id, course);
+
+  if (!result) throw new AppError(httpStatus.NOT_FOUND, 'Course not found.');
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course info updated successfully!',
+    data: result,
+  });
+});
+
 const deleteById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await CourseServices.deleteByIdFromDB(id);
@@ -55,4 +70,10 @@ const deleteById = catchAsync(async (req, res) => {
   });
 });
 
-export const CourseControllers = { create, getAll, getById, deleteById };
+export const CourseControllers = {
+  create,
+  getAll,
+  getById,
+  updateById,
+  deleteById,
+};
