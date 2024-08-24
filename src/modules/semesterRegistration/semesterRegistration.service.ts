@@ -46,4 +46,21 @@ const getAllFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
-export const SemesterRegistrationServices = { createIntoDB, getAllFromDB };
+const getByIdFromDB = async (id: string) => {
+  const result = await SemesterRegistration.findById(id).populate({
+    path: 'academicSemester',
+  });
+
+  if (!result)
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Semester Registration is not found.',
+    );
+  return result;
+};
+
+export const SemesterRegistrationServices = {
+  createIntoDB,
+  getAllFromDB,
+  getByIdFromDB,
+};
