@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { ISemesterRegistration } from './semesterRegistration.interface';
+import { SEMESTER_REGISTRATION_STATUS } from './semesterRegistration.constant';
 
 const semesterRegistrationSchema = new Schema<ISemesterRegistration>(
   {
@@ -11,7 +12,7 @@ const semesterRegistrationSchema = new Schema<ISemesterRegistration>(
     status: {
       type: String,
       enum: {
-        values: ['UPCOMING', 'ONGOING', 'ENDED'],
+        values: SEMESTER_REGISTRATION_STATUS,
         message: '{VALUE} is not a valid status.',
       },
       required: [true, 'Please provide the registration status.'],
