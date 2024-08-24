@@ -16,4 +16,15 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-export const SemesterRegistrationControllers = { create };
+const getAll = catchAsync(async (req, res) => {
+  const result = await SemesterRegistrationServices.getAllFromDB(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All Semester Registration info retrieved successfully!',
+    data: result,
+  });
+});
+
+export const SemesterRegistrationControllers = { create, getAll };
