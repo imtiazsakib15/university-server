@@ -20,4 +20,31 @@ const createSchema = z.object({
   }),
 });
 
-export const SemesterRegistrationSchemas = { createSchema };
+const updateSchema = z.object({
+  body: z.object({
+    semesterRegistration: z.object({
+      academicSemester: z
+        .string({
+          required_error: 'Academic semester ID is required.',
+        })
+        .optional(),
+      status: z
+        .enum(SEMESTER_REGISTRATION_STATUS as [string, ...string[]])
+        .optional(),
+      startDate: z
+        .date({ required_error: 'Start date is required.' })
+        .optional(),
+      endDate: z.date({ required_error: 'End date is required.' }).optional(),
+      minCredit: z
+        .number({ required_error: 'Minimum credit is required.' })
+        .min(1, { message: 'Minimum credit must be at least 1.' })
+        .optional(),
+      maxCredit: z
+        .number({ required_error: 'Maximum credit is required.' })
+        .max(15, { message: 'Maximum credit must be at most 15.' })
+        .optional(),
+    }),
+  }),
+});
+
+export const SemesterRegistrationSchemas = { createSchema, updateSchema };

@@ -6,8 +6,9 @@ const semesterRegistrationSchema = new Schema<ISemesterRegistration>(
   {
     academicSemester: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicSemester',
       required: [true, 'Please provide the academic semester ID.'],
+      unique: true,
+      ref: 'AcademicSemester',
     },
     status: {
       type: String,
@@ -33,7 +34,7 @@ const semesterRegistrationSchema = new Schema<ISemesterRegistration>(
     maxCredit: {
       type: Number,
       required: [true, 'Please provide the maximum credit allowed.'],
-      min: [15, 'Maximum credit must be at least 15.'],
+      max: [15, 'Maximum credit must be at most 15.'],
     },
   },
   {
