@@ -64,4 +64,14 @@ const updateSchema: AnyZodObject = z.object({
   }),
 });
 
-export const CourseValidationSchemas = { createSchema, updateSchema };
+const courseFacultySchema: AnyZodObject = z.object({
+  body: z.object({
+    faculties: z.array(z.string().optional()),
+  }),
+});
+
+export const CourseValidationSchemas = {
+  createSchema,
+  updateSchema,
+  courseFacultySchema,
+};

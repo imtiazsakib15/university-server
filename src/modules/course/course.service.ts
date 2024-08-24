@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { SEARCHABLE_FIELDS } from './course.constant';
-import { ICourse } from './course.interface';
-import { Course } from './course.model';
+import { ICourse, ICourseFaculty } from './course.interface';
+import { Course, CourseFaculty } from './course.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
@@ -114,10 +114,26 @@ const deleteByIdFromDB = async (id: string) => {
   return await Course.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
 };
 
+const assignCourseFacultiesIntoDB = async (
+  id: string,
+  payload: Partial<ICourseFaculty>,
+) => {
+  return await CourseFaculty.findByIdAndUpdate(
+    id,
+    { course: id, $addToSet: { faculties: { $each: payload } } },
+    {
+      upsert: true,
+      new: true,
+      runValidators: true,
+    },
+  );
+};
+
 export const CourseServices = {
   createIntoDB,
   getAllFromDB,
   getByIdFromDB,
   updateByIdIntoDB,
   deleteByIdFromDB,
+  assignCourseFacultiesIntoDB,
 };
