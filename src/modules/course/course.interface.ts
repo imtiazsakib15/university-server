@@ -13,3 +13,8 @@ export interface ICourse {
   preRequisiteCourses?: IPreRequisiteCourse[];
   isDeleted?: boolean;
 }
+
+export interface ICourseFaculty {
+  course: Types.ObjectId;
+  faculties: Types.ObjectId[];
+}
