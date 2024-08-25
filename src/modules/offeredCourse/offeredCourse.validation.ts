@@ -43,6 +43,31 @@ const createSchema: AnyZodObject = z.object({
   }),
 });
 
+const updateSchema: AnyZodObject = z.object({
+  body: z.object({
+    offeredCourse: z.object({
+      semesterRegistration: z.string().optional(),
+      academicSemester: z.string().optional(),
+      academicFaculty: z.string().optional(),
+      academicDepartment: z.string().optional(),
+      course: z.string().optional(),
+      faculty: z.string().optional(),
+      maxCapacity: z
+        .number()
+        .min(1, 'Maximum capacity must be at least 1.')
+        .optional(),
+      section: z
+        .number()
+        .min(1, 'Section number must be at least 1.')
+        .optional(),
+      days: z.array(z.enum(DAYS as [string, ...string[]])).optional(),
+      startTime: z.string().optional(),
+      endTime: z.string().optional(),
+    }),
+  }),
+});
+
 export const OfferedCourseValidationSchemas = {
   createSchema,
+  updateSchema,
 };
