@@ -39,4 +39,25 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
-export const SemesterRegistrationControllers = { create, getAll, getById };
+const updateById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { semesterRegistration } = req.body;
+  const result = await SemesterRegistrationServices.updateByIdFromDB(
+    id,
+    semesterRegistration,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Semester Registration info updated successfully!',
+    data: result,
+  });
+});
+
+export const SemesterRegistrationControllers = {
+  create,
+  getAll,
+  getById,
+  updateById,
+};

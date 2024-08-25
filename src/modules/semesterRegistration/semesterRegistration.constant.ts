@@ -3,3 +3,9 @@ export const SEMESTER_REGISTRATION_STATUS: string[] = [
   'ONGOING',
   'ENDED',
 ];
+
+export const REGISTRATION_STATUS = {
+  UPCOMING: 'UPCOMING',
+  ONGOING: 'ONGOING',
+  ENDED: 'ENDED',
+};
