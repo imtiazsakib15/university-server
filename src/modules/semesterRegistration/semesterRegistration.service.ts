@@ -6,6 +6,16 @@ import { SemesterRegistration } from './semesterRegistration.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 
 const createIntoDB = async (payload: ISemesterRegistration) => {
+  // check if any upcoming or ongoing semester exist
+  const isUpcomingOrOngoingSemesterExists = await SemesterRegistration.findOne({
+    $or: [{ status: 'UPCOMING' }, { status: 'ONGOING' }],
+  });
+  if (isUpcomingOrOngoingSemesterExists)
+    throw new AppError(
+      httpStatus.CONFLICT,
+      `An ${isUpcomingOrOngoingSemesterExists.status} Semester is already exist!`,
+    );
+
   // check if the academic semester is not exist
   const isAcademicSemesterExists = await AcademicSemester.findById(
     payload.academicSemester,
