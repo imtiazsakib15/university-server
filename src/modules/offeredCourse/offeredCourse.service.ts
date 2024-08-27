@@ -7,6 +7,7 @@ import { OfferedCourse } from './offeredCourse.model';
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
+import { Types } from 'mongoose';
 
 const createIntoDB = async (payload: IOfferedCourse) => {
   const {
@@ -15,6 +16,10 @@ const createIntoDB = async (payload: IOfferedCourse) => {
     academicDepartment,
     course,
     faculty,
+    section,
+    days,
+    startTime,
+    endTime,
   } = payload;
 
   // check if semester registration is available
@@ -50,6 +55,29 @@ const createIntoDB = async (payload: IOfferedCourse) => {
   const requestedFaculty = await Faculty.findById(faculty);
   if (!requestedFaculty)
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty is not found!');
+
+  // check if the department belongs to the academic faculty
+  const isDepartmentBelongToFaculty = await AcademicDepartment.findOne({
+    _id: academicDepartment,
+    academicFaculty,
+  });
+  if (!isDepartmentBelongToFaculty)
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `The academic department '${requestedAcademicDepartment.name}' does not belong to the academic faculty '${requestedAcademicFaculty.name}'!`,
+    );
+
+  // check if any offer course exist with same semester registration, course and section
+  const isSectionAlreadyExist = await OfferedCourse.findOne({
+    semesterRegistration,
+    course,
+    section,
+  });
+  if (isSectionAlreadyExist)
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'This section is already exists!',
+    );
 
   const academicSemester = requestedSemesterRegistration.academicSemester;
   const result = await OfferedCourse.create({
