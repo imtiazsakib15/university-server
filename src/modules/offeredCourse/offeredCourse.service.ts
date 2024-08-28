@@ -8,6 +8,7 @@ import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Types } from 'mongoose';
+import { hasTimeConflict } from './offeredCourse.utils';
 
 const createIntoDB = async (payload: IOfferedCourse) => {
   const {
@@ -78,6 +79,31 @@ const createIntoDB = async (payload: IOfferedCourse) => {
       httpStatus.BAD_REQUEST,
       'This section is already exists!',
     );
+
+  // check if the faculty have a schedule
+  const assignedSchedules = await OfferedCourse.aggregate([
+    {
+      $match: {
+        semesterRegistration: new Types.ObjectId(semesterRegistration),
+        course: new Types.ObjectId(course),
+        faculty: new Types.ObjectId(faculty),
+      },
+    },
+    {
+      $unwind: { path: '$days' },
+    },
+    {
+      $match: { days: { $in: days } },
+    },
+    { $project: { days: 1, startTime: 1, endTime: 1 } },
+  ]);
+
+  const newSchedule = {
+    days,
+    startTime,
+    endTime,
+  };
+  hasTimeConflict(assignedSchedules, newSchedule);
 
   const academicSemester = requestedSemesterRegistration.academicSemester;
   const result = await OfferedCourse.create({
