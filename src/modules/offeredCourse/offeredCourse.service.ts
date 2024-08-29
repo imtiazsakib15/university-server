@@ -113,6 +113,10 @@ const createIntoDB = async (payload: IOfferedCourse) => {
   return result;
 };
 
+const getAllFromDB = async () => {
+  return await OfferedCourse.find();
+};
+
 const updateByIdIntoDB = async (
   id: string,
   payload: Pick<
@@ -177,4 +181,8 @@ const updateByIdIntoDB = async (
   return result;
 };
 
-export const OfferedCourseServices = { createIntoDB, updateByIdIntoDB };
+export const OfferedCourseServices = {
+  createIntoDB,
+  getAllFromDB,
+  updateByIdIntoDB,
+};
