@@ -190,9 +190,27 @@ const updateByIdIntoDB = async (
   return result;
 };
 
+const deleteByIdFromDB = async (id: string) => {
+  const requestedOfferedCourse = await OfferedCourse.findById(id);
+
+  if (!requestedOfferedCourse)
+    throw new AppError(httpStatus.NOT_FOUND, 'Offered Course is not found');
+
+  const requestedSemesterRegistration = await SemesterRegistration.findById({
+    _id: requestedOfferedCourse.semesterRegistration,
+  });
+  if (requestedSemesterRegistration?.status !== 'UPCOMING')
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      `Offered Course can't be deleted because semester registration is '${requestedSemesterRegistration?.status}'`,
+    );
+  return await OfferedCourse.findByIdAndDelete(id);
+};
+
 export const OfferedCourseServices = {
   createIntoDB,
   getAllFromDB,
   getByIdFromDB,
   updateByIdIntoDB,
+  deleteByIdFromDB,
 };

@@ -21,4 +21,6 @@ router.patch(
   OfferedCourseControllers.updateById,
 );
 
+router.delete('/:id', OfferedCourseControllers.deleteById);
+
 export const OfferedCourseRoutes = router;
