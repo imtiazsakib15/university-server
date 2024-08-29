@@ -1,12 +1,6 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
-import { ISchedule, TDays } from './offeredCourse.interface';
-
-interface IAssignedSchedule {
-  days: TDays;
-  startTime: string;
-  endTime: string;
-}
+import { IAssignedSchedule, ISchedule } from './offeredCourse.interface';
 
 export const hasTimeConflict = (
   assignedSchedules: IAssignedSchedule[],

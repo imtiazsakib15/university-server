@@ -21,3 +21,9 @@ export interface ISchedule {
   startTime: string;
   endTime: string;
 }
+
+export interface IAssignedSchedule {
+  days: TDays;
+  startTime: string;
+  endTime: string;
+}

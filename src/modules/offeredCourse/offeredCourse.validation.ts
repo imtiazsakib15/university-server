@@ -1,6 +1,10 @@
 import { AnyZodObject, z } from 'zod';
 import { DAYS } from './offeredCourse.constant';
 
+const timeStringSchema = z
+  .string()
+  .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format (HH:MM)');
+
 const createSchema: AnyZodObject = z.object({
   body: z.object({
     offeredCourse: z
@@ -34,16 +38,8 @@ const createSchema: AnyZodObject = z.object({
         days: z.array(z.enum(DAYS as [string, ...string[]]), {
           required_error: 'Please provide the days.',
         }),
-        startTime: z
-          .string({
-            required_error: 'Please provide the start time.',
-          })
-          .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format (HH:MM)'),
-        endTime: z
-          .string({
-            required_error: 'Please provide the end time.',
-          })
-          .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format (HH:MM)'),
+        startTime: timeStringSchema,
+        endTime: timeStringSchema,
       })
       .refine((data) => data.startTime < data.endTime, {
         message: 'End time must be after start time',
@@ -54,16 +50,18 @@ const createSchema: AnyZodObject = z.object({
 
 const updateSchema: AnyZodObject = z.object({
   body: z.object({
-    offeredCourse: z.object({
-      faculty: z.string().optional(),
-      maxCapacity: z
-        .number()
-        .min(1, 'Maximum capacity must be at least 1.')
-        .optional(),
-      days: z.array(z.enum(DAYS as [string, ...string[]])).optional(),
-      startTime: z.string().optional(),
-      endTime: z.string().optional(),
-    }),
+    offeredCourse: z
+      .object({
+        faculty: z.string(),
+        maxCapacity: z.number().min(1, 'Maximum capacity must be at least 1.'),
+        days: z.array(z.enum(DAYS as [string, ...string[]])),
+        startTime: timeStringSchema,
+        endTime: timeStringSchema,
+      })
+      .refine((data) => data?.startTime < data?.endTime, {
+        message: 'End time must be after start time',
+        path: ['endTime'],
+      }),
   }),
 });
 

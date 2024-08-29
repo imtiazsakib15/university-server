@@ -80,7 +80,7 @@ const createIntoDB = async (payload: IOfferedCourse) => {
       'This section is already exists!',
     );
 
-  // check if the faculty have a schedule
+  // check if the faculty already have a schedule at the same time
   const assignedSchedules = await OfferedCourse.aggregate([
     {
       $match: {
@@ -113,4 +113,68 @@ const createIntoDB = async (payload: IOfferedCourse) => {
   return result;
 };
 
-export const OfferedCourseServices = { createIntoDB };
+const updateByIdIntoDB = async (
+  id: string,
+  payload: Pick<
+    IOfferedCourse,
+    'faculty' | 'maxCapacity' | 'days' | 'startTime' | 'endTime'
+  >,
+) => {
+  // check if the requested offered course is available
+  const requestedOfferedCourse = await OfferedCourse.findById(id);
+  if (!requestedOfferedCourse)
+    throw new AppError(httpStatus.NOT_FOUND, 'Offered course is not found!');
+
+  // check if the requested semester registration status is 'UPCOMING'
+  const requestedSemesterRegistration = await SemesterRegistration.findById({
+    _id: requestedOfferedCourse.semesterRegistration,
+  });
+  if (requestedSemesterRegistration?.status !== 'UPCOMING')
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      `Can't update this offered course. Because semester is ${requestedSemesterRegistration?.status}`,
+    );
+
+  // check if the requested course faculty is available
+  const requestedCourseFaculty = await Faculty.findById({
+    _id: payload.faculty,
+  });
+  if (!requestedCourseFaculty)
+    throw new AppError(httpStatus.NOT_FOUND, 'Faculty is not found!');
+
+  // check if the faculty already have a schedule at the same time
+  const assignedSchedules = await OfferedCourse.aggregate([
+    {
+      $match: {
+        semesterRegistration: new Types.ObjectId(
+          requestedOfferedCourse.semesterRegistration,
+        ),
+        course: new Types.ObjectId(requestedOfferedCourse.course),
+        faculty: new Types.ObjectId(requestedOfferedCourse.faculty),
+        _id: { $ne: new Types.ObjectId(id) },
+      },
+    },
+    {
+      $unwind: { path: '$days' },
+    },
+    {
+      $match: { days: { $in: payload.days } },
+    },
+    { $project: { days: 1, startTime: 1, endTime: 1 } },
+  ]);
+
+  const newSchedule = {
+    days: payload.days,
+    startTime: payload.startTime,
+    endTime: payload.endTime,
+  };
+  hasTimeConflict(assignedSchedules, newSchedule);
+
+  const result = await OfferedCourse.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
+export const OfferedCourseServices = { createIntoDB, updateByIdIntoDB };

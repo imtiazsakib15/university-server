@@ -15,4 +15,20 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-export const OfferedCourseControllers = { create };
+const updateById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { offeredCourse } = req.body;
+  const result = await OfferedCourseServices.updateByIdIntoDB(
+    id,
+    offeredCourse,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Offered Course updated successfully.',
+    data: result,
+  });
+});
+
+export const OfferedCourseControllers = { create, updateById };
