@@ -117,6 +117,15 @@ const getAllFromDB = async () => {
   return await OfferedCourse.find();
 };
 
+const getByIdFromDB = async (id: string) => {
+  const result = await OfferedCourse.findById(id);
+
+  if (!result)
+    throw new AppError(httpStatus.NOT_FOUND, 'Offered Course is not found');
+
+  return result;
+};
+
 const updateByIdIntoDB = async (
   id: string,
   payload: Pick<
@@ -184,5 +193,6 @@ const updateByIdIntoDB = async (
 export const OfferedCourseServices = {
   createIntoDB,
   getAllFromDB,
+  getByIdFromDB,
   updateByIdIntoDB,
 };
